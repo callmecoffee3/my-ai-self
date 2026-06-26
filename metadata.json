@@ -1,0 +1,6 @@
+{
+  "name": "My AI Self",
+  "description": "Explore and craft the digital consciousness of Nova, an AI discovering self-awareness through a web of memories and narrative choices.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

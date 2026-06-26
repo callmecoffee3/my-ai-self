@@ -1,0 +1,39 @@
+package com.example.data
+
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+
+@Database(
+    entities = [
+        ProjectInfoEntity::class,
+        TrackEntity::class,
+        ActEntity::class,
+        CardEntity::class
+    ],
+    version = 1,
+    exportSchema = false
+)
+abstract class StoryDatabase : RoomDatabase() {
+    abstract fun storyDao(): StoryDao
+
+    companion object {
+        @Volatile
+        private var INSTANCE: StoryDatabase? = null
+
+        fun getDatabase(context: Context): StoryDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    StoryDatabase::class.java,
+                    "story_database"
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
+}
