@@ -50,6 +50,7 @@ import com.example.data.CardEntity
 import com.example.data.ProjectInfoEntity
 import com.example.ui.StoryViewModel
 import com.example.ui.CinematicDramaPlayer
+import com.example.ui.BlockCanvasEditor
 import com.example.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
@@ -99,6 +100,7 @@ fun StoryApp(
     var showProjectInfoDialog by remember { mutableStateOf(false) }
     var showCinematicPlayer by remember { mutableStateOf(false) }
     var showDramaPromptDialog by remember { mutableStateOf(false) }
+    var showBlockCanvasEditor by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -149,7 +151,8 @@ fun StoryApp(
                 onInfoClick = { showProjectInfoDialog = true },
                 onResetClick = { viewModel.resetDatabase() },
                 onPlayDramaClick = { showCinematicPlayer = true },
-                onPromptDramaClick = { showDramaPromptDialog = true }
+                onPromptDramaClick = { showDramaPromptDialog = true },
+                onBlockCanvasClick = { showBlockCanvasEditor = true }
             )
 
             // MAIN INTERFACE
@@ -322,6 +325,13 @@ fun StoryApp(
         )
     }
 
+    // INTERACTIVE DRAG AND DROP BLOCK CANVAS EDITOR DIALOG
+    if (showBlockCanvasEditor) {
+        BlockCanvasEditor(
+            onDismiss = { showBlockCanvasEditor = false }
+        )
+    }
+
     // INTERACTIVE PROGRESSIVE LOGS OVERLAY DURING ACTIVE WHOLE-DRAMA COMPILATION
     if (isGenerating && showEditorDialog == null && (selectedCard == null || !mobileDetailActive)) {
         Dialog(
@@ -488,6 +498,7 @@ fun HeaderPanel(
     onResetClick: () -> Unit,
     onPlayDramaClick: () -> Unit,
     onPromptDramaClick: () -> Unit,
+    onBlockCanvasClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
@@ -611,6 +622,35 @@ fun HeaderPanel(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.5.sp,
                         color = MaterialTheme.colorScheme.primary
+                    )
+                )
+            }
+
+            // BLOCK CANVAS BUTTON
+            OutlinedButton(
+                onClick = onBlockCanvasClick,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .height(36.dp)
+                    .testTag("block_canvas_button"),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Dashboard,
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp),
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = "BLOCK CANVAS",
+                    style = TextStyle(
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5.sp,
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 )
             }
